@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+/src/main/resources/application-local.yml
+/mock/mykey.pem
+/mock/private.pem
+/mock/public_key.pub
+/logs/
+/tmp/

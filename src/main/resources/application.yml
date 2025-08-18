@@ -1,0 +1,24 @@
+spring:
+  profiles:
+    active: local
+  application:
+    name: transactions-service
+  kafka:
+    bootstrap-servers: localhost:9092   # adjust for your environment
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+    streams:
+      application-id: transactions-service
+      replication-factor: 1               # use 3 in production
+      properties:
+        commit.interval.ms: 5000          # frequency of flushing state store
+        cache.max.bytes.buffering: 10485760 # 10 MB cache
+        num.stream.threads: 3             # parallelism
+        default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+        default.value.serde: org.apache.kafka.common.serialization.Serdes$ByteArraySerde
+        processing.guarantee: exactly_once_v2  # exactly-once semantics
+  output:
+    ansi:
+      enabled: always
