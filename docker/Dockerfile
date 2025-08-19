@@ -22,7 +22,12 @@ RUN groupadd -r spring && useradd -r -g spring spring
 ENV LOG_DIR=/opt/app/logs
 ENV KAFKA_STATE_DIR=/opt/app/kafka_state
 
-RUN microdnf update && microdnf install -y curl
+RUN apt-get update && apt-get install -y \
+    curl \
+    unzip \
+    ca-certificates \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy jar with fixed name
 COPY --from=builder --chown=spring:spring /opt/app/target/transactions-service /opt/app/transactions-service
