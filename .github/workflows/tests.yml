@@ -9,6 +9,21 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
+
+    services:
+      docker:
+        image: docker:24-dind
+        privileged: true
+        ports:
+          - 2375:2375
+        options: >-
+          --privileged
+          --name dind
+          --entrypoint dockerd-entrypoint.sh
+          -D
+        env:
+          DOCKER_TLS_CERTDIR: ""
+
     steps:
       - uses: actions/checkout@v4
 
@@ -18,6 +33,11 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
+
+      - name: Set up Docker client
+        run: |
+          echo "DOCKER_HOST=tcp://localhost:2375" >> $GITHUB_ENV
+          docker info
 
       - name: Run Tests
         run: mvn verify -Dspring.profiles.active=test
