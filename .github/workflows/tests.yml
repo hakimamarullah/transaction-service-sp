@@ -35,6 +35,7 @@ jobs:
       - name: Set up Docker client
         run: |
           echo "DOCKER_HOST=tcp://localhost:2375" >> $GITHUB_ENV
+          echo "TESTCONTAINERS_RYUK_DISABLED=true" >> $GITHUB_ENV
           docker info
 
       - name: Run Tests
