@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: transactions-svc
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "30"  # Wait for 30 seconds to establish a connection
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "30"     # Wait for 30 seconds for a response from the service
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "30"     # Wait for 30 seconds to send data to the service
+spec:
+  selector:
+    app: transactions-svc
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP

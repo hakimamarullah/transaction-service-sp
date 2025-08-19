@@ -2,7 +2,7 @@
 <Configuration status="WARN" monitorInterval="30">
     <Properties>
         <Property name="LOG_PATTERN">trace_id: %X{trace_id} | span_id: %X{span_id} | %d{dd-MM-yyyy HH:mm:ss.SSS}{GMT+7} [%t] %-5level %logger{36} - %msg%n</Property>
-        <Property name="LOG_PATH">${env:LOG_FILE_PATH:-./logs}</Property>
+        <Property name="LOG_PATH">${env:LOG_DIR:-./logs}</Property>
         <Property name="LOG_SIZE">${env:LOG_FILE_SIZE:-50MB}</Property>
         <Property name="LOG_ROLLOVER">${env:LOG_ROLLOVER_COUNT:-10}</Property>
         <Property name="APP_NAME">${env:SPRING_APPLICATION_NAME:-transactions-service}</Property>

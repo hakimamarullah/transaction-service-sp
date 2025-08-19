@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transactions-svc-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: transactions-svc
+  template:
+    metadata:
+      labels:
+        app: transactions-svc
+    spec:
+      containers:
+        - name: transactions-svc
+          image: hakimamarullah/transaction-service-sp:latest
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /opt/app/logs
+              name: logs-filebeat
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: "256m"
+              memory: "256Mi"
+            limits:
+              cpu: "512m"
+              memory: "512Mi"
+#          envFrom:
+#            - configMapRef:
+#                name: general-configmap
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 6
+      volumes:
+        - name: logs-filebeat
+          hostPath:
+            path: /data/logs
+            type: DirectoryOrCreate
+      automountServiceAccountToken: false

@@ -29,12 +29,6 @@ public class TransactionsController {
 
     private final IStoreTransactionService storeTransactionService;
 
-    /**
-     * Fetch transactions for a customer by year/month with pagination and base currency conversion.
-     *
-     * Example:
-     *   GET /api/v1/transactions?year=2025&month=8&page=0&size=20&baseCurrency=EUR
-     */
     @GetMapping
     public ResponseEntity<TransactionPageResponse> getTransactions(
             JwtAuthenticationToken jwt,

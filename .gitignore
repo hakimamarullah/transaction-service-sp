@@ -37,3 +37,6 @@ build/
 /mock/public_key.pub
 /logs/
 /tmp/
+/kubernetes/logs/
+
+/kubernetes/.env.*

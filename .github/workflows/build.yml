@@ -32,6 +32,7 @@ jobs:
     # Only build on tag pushes
     if: startsWith(github.ref, 'refs/tags/v')
     environment: production
+    needs: tests
     runs-on: ubuntu-latest
     outputs:
       image-tag: ${{ steps.meta.outputs.tags }}
