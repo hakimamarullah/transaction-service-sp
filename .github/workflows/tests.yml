@@ -19,11 +19,5 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v3
-
-      - name: Verify Docker is running
-        run: docker info
-
       - name: Run Tests
         run: mvn verify -Dspring.profiles.active=test
