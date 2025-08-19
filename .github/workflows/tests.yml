@@ -19,7 +19,6 @@ jobs:
           --privileged
           --name dind
           --entrypoint dockerd-entrypoint.sh
-          -D
         env:
           DOCKER_TLS_CERTDIR: ""
 
