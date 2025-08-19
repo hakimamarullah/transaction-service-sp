@@ -32,7 +32,7 @@ RUN apt-get update && apt-get install -y \
 # Copy jar with fixed name
 COPY --from=builder --chown=spring:spring /opt/app/target/transactions-service /opt/app/transactions-service
 
-RUN mkdir -p "$LOG_DIR" && chown -R spring:spring "$LOG_DIR" \
+RUN mkdir -p "$LOG_DIR" && chown -R spring:spring "$LOG_DIR" && \
     mkdir -p "$KAFKA_STATE_DIR" && chown -R spring:spring "$KAFKA_STATE_DIR"
 
 # Switch to non-root user
