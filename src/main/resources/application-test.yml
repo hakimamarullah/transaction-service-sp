@@ -40,3 +40,7 @@ jwt:
       PrO2M92aFEkeIvDWdGKwMBVOASHG36E+U/kBY9fbFExjDivfLBKxd2ToC6ffFUy7
       fVF8UpZiwL4STaQArnSEHAKz
       -----END PRIVATE KEY-----
+
+logging:
+  level:
+    org.apache.kafka.clients: INFO
