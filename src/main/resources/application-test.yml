@@ -43,4 +43,4 @@ jwt:
 
 logging:
   level:
-    org.apache.kafka.clients: INFO
+    org.apache.kafka.clients: off
