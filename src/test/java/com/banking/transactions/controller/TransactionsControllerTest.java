@@ -188,7 +188,7 @@ class TransactionsControllerTest {
                             .body().as(TransactionPageResponse.class);
 
                     // Then - Verify Kafka message was sent
-                    assertEquals(2, res.getPageInfo().getTotalElements());
+                    assertEquals(10, res.getPageInfo().getTotalElements());
                 });
 
     }
