@@ -40,3 +40,4 @@ build/
 /kubernetes/logs/
 
 /kubernetes/.env.*
+/data/

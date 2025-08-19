@@ -2,7 +2,6 @@ package com.banking.transactions.config;
 
 import com.banking.transactions.dto.Transaction;
 import org.apache.kafka.clients.admin.AdminClientConfig;
-import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,8 +44,8 @@ public class KafkaTemplateConfig {
         return new KafkaAdmin(configs);
     }
 
-    @Bean
-    public NewTopic transactionsTopic() {
-        return new NewTopic(StoreConfig.TRANSACTION_TOPIC, 1, (short) 1);
-    }
+//    @Bean
+//    public NewTopic transactionsTopic() {
+//        return new NewTopic(StoreConfig.TRANSACTION_TOPIC, 1, (short) 1);
+//    }
 }
