@@ -43,9 +43,9 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
                 "spring.main.banner-mode=off",
-                "logging.level.org.testcontainers=INFO",
-                "logging.level.com.github.dockerjava=INFO",
-                "logging.level.org.apache.kafka=INFO"
+                "logging.level.org.testcontainers=debug",
+                "logging.level.com.github.dockerjava=debug",
+                "logging.level.org.apache.kafka=debug"
         }
 )
 @Slf4j
