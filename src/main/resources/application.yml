@@ -19,6 +19,40 @@ spring:
         default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
         default.value.serde: org.apache.kafka.common.serialization.Serdes$ByteArraySerde
         processing.guarantee: exactly_once_v2  # exactly-once semantics
+      state-dir: ./tmp/kafka-streams/state
   output:
     ansi:
       enabled: always
+
+
+otel:
+  traces:
+    exporter: none
+  metrics:
+    exporter: none
+  logs:
+    exporter: console
+  instrumentation:
+    micrometer:
+      enabled: true
+    http:
+      client:
+        emit-experimental-telemetry: true
+  sdk:
+    disabled: false
+  propagators: tracecontext,baggage,b3
+
+management:
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+    baggage:
+      correlation:
+        enabled: true
+      remote-fields:
+        - correlation-id
+        - request-id
+    propagation:
+      consume: w3c,b3,b3_multi
+      produce: w3c,b3,b3_multi

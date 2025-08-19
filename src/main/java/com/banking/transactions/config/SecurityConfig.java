@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -53,13 +52,14 @@ public class SecurityConfig {
     @Value("${cors.allowed.origins:*}")
     private List<String> allowedOrigins;
 
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     private String[] getNoAuthPaths() {
         return new String[]{
                 "/actuator/**",
                 "/swagger-ui/**",
                 "/v3/api-docs",
-                "swagger-ui.html"
+                "/swagger-ui.html"
         };
     }
 
@@ -76,6 +76,7 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(handler -> handler.authenticationEntryPoint(authenticationEntryPoint))
                 .build();
     }
 
@@ -115,12 +116,5 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-    // Set password encoding schema
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
 
 }

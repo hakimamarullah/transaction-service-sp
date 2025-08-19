@@ -1,6 +1,6 @@
 package com.banking.transactions.service.impl;
 
-import com.banking.transactions.config.TopologyConfig;
+import com.banking.transactions.config.StoreConfig;
 import com.banking.transactions.dto.PageInfo;
 import com.banking.transactions.dto.PageSummary;
 import com.banking.transactions.dto.Transaction;
@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.kafka.streams.StoreQueryParameters;
 import org.apache.kafka.streams.state.QueryableStoreTypes;
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
+import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +25,17 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
+@RegisterReflectionForBinding({
+        TransactionDTO.class,
+        TransactionPageResponse.class,
+        PageInfo.class,
+        PageSummary.class
+})
 public class TransactionsQueryService implements ITransactionsQueryService {
 
     private final StreamsBuilderFactoryBean streamsFactory;
     private final IExchangeRateService exchangeRateService;
+
 
     @Override
     public TransactionPageResponse getTransactions(String customerId,
@@ -40,7 +48,7 @@ public class TransactionsQueryService implements ITransactionsQueryService {
         ReadOnlyKeyValueStore<String, Transaction> store =
                 streams
                         .store(StoreQueryParameters.fromNameAndType(
-                                TopologyConfig.STORE_NAME,
+                                StoreConfig.STORE_NAME,
                                 QueryableStoreTypes.keyValueStore()
                         ));
 

@@ -68,6 +68,11 @@
             <AppenderRef ref="AppFile"/>
         </Logger>
 
+        <Logger name="com.banking.transactions.config.TokenGenerator" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="AppFile"/>
+        </Logger>
+
         <Logger name="com.banking.transactions.controller.GlobalControllerAdvice" level="debug" additivity="false">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="AppFile"/>

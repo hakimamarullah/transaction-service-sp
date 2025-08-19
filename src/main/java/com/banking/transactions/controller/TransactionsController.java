@@ -1,6 +1,7 @@
 package com.banking.transactions.controller;
 
 
+import com.banking.transactions.annotations.LogRequestResponse;
 import com.banking.transactions.dto.Transaction;
 import com.banking.transactions.dto.TransactionPageResponse;
 import com.banking.transactions.service.IStoreTransactionService;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/transactions")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "bearerJWT")
+@LogRequestResponse
 public class TransactionsController {
 
     private final ITransactionsQueryService queryService;
@@ -31,19 +33,19 @@ public class TransactionsController {
      * Fetch transactions for a customer by year/month with pagination and base currency conversion.
      *
      * Example:
-     *   GET /api/transactions?customerId=P-0123456789&year=2025&month=8&page=0&size=20&baseCurrency=EUR
+     *   GET /api/v1/transactions?year=2025&month=8&page=0&size=20&baseCurrency=EUR
      */
     @GetMapping
     public ResponseEntity<TransactionPageResponse> getTransactions(
-            JwtAuthenticationToken jwtAuthenticationToken,
+            JwtAuthenticationToken jwt,
             @RequestParam int year,
             @RequestParam int month,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "EUR") String baseCurrency) {
+            @RequestParam(defaultValue = "IDR") String baseCurrency) {
 
         TransactionPageResponse response =
-                queryService.getTransactions(jwtAuthenticationToken.getToken().getClaimAsString("pid"), year, month, page, size, baseCurrency);
+                queryService.getTransactions(jwt.getToken().getClaimAsString("user_id"), year, month, page, size, baseCurrency);
 
         return ResponseEntity.ok(response);
     }

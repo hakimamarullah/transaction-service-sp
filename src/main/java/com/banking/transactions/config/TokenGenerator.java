@@ -20,17 +20,20 @@ public class TokenGenerator {
     private final JwtEncoder jwtEncoder;
 
     @PostConstruct
-    public void generateToken() {
+    public void printToken() {
+        log.info("Generated JWT token: {}", generateToken());
+    }
+
+    public String generateToken() {
         String scope = "USER";
 
         JwtClaimsSet claim = JwtClaimsSet.builder()
                 .issuer("ebanking.com")
                 .issuedAt(Instant.now())
                 .expiresAt(Instant.now().plus(10, ChronoUnit.MINUTES))
-                .claim("pid", "P-0123456789")
+                .claim("user_id", "P-0123456789")
                 .claim("roles", scope)
                 .build();
-        String token = jwtEncoder.encode(JwtEncoderParameters.from(claim)).getTokenValue();
-        log.info("Generated JWT token: {}", token);
+        return jwtEncoder.encode(JwtEncoderParameters.from(claim)).getTokenValue();
     }
 }

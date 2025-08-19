@@ -47,6 +47,6 @@ public class KafkaTemplateConfig {
 
     @Bean
     public NewTopic transactionsTopic() {
-        return new NewTopic(TopologyConfig.TRANSACTION_TOPIC, 1, (short) 1);
+        return new NewTopic(StoreConfig.TRANSACTION_TOPIC, 1, (short) 1);
     }
 }

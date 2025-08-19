@@ -1,5 +1,6 @@
 package com.banking.transactions.dto;
 
+import com.banking.transactions.annotations.Censor;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -36,6 +37,7 @@ public class Transaction {
 
     @Schema(description = "Account IBAN", example = "CH93-0000-0000-0000-0000-0")
     @NotBlank
+    @Censor
     private String accountIban;
 
     @Schema(description = "Transaction value date", example = "2020-10-01")
@@ -49,6 +51,7 @@ public class Transaction {
 
     @Schema(description = "Customer identifier", example = "P-0123456789")
     @NotBlank
+    @Censor
     private String customerId;
 
     @Schema(description = "Transaction type", example = "DEBIT")

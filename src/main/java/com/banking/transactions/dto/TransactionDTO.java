@@ -1,5 +1,6 @@
 package com.banking.transactions.dto;
 
+import com.banking.transactions.annotations.Censor;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,7 @@ public class TransactionDTO {
     private BigDecimal exchangeRate;
 
     @Schema(description = "Account IBAN")
+    @Censor
     private String accountIban;
 
     @Schema(description = "Transaction value date")

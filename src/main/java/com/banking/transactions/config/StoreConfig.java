@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.support.serializer.JsonSerde;
 
 @Configuration
-public class TopologyConfig {
+public class StoreConfig {
     public static final String TRANSACTION_TOPIC = "transactions";
     public static final String STORE_NAME = "transactions-store";
 
