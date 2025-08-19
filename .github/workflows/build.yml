@@ -25,7 +25,7 @@ jobs:
           cache: maven
 
       - name: Run Tests
-        run: mvn verify -Dspring.profiles.active=test
+        run: mvn clean verify -Dspring.profiles.active=test
 
   build_and_push:
     name: Build and Push Docker image

@@ -1,14 +1,19 @@
 package com.banking.transactions.controller;
 
 
+import com.banking.transactions.config.StoreConfig;
 import com.banking.transactions.config.TokenGenerator;
 import com.banking.transactions.dto.Transaction;
 import com.banking.transactions.dto.TransactionPageResponse;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -28,6 +33,7 @@ import org.testcontainers.utility.DockerImageName;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -66,6 +72,16 @@ class TransactionsControllerTest {
     private TokenGenerator tokenGenerator;
 
 
+    @BeforeAll
+    static void setupKafkaTopics() throws Exception {
+        try (AdminClient admin = AdminClient.create(
+                Map.of(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers()))) {
+
+            NewTopic topic = new NewTopic(StoreConfig.TRANSACTION_TOPIC, 3, (short) 1);
+            admin.createTopics(List.of(topic)).all().get();
+        }
+    }
+
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.kafka.bootstrap-servers", kafka::getBootstrapServers);
@@ -84,7 +100,7 @@ class TransactionsControllerTest {
     }
 
     @BeforeEach
-    void setUp() {
+    void setUp()  {
         RestAssured.port = port;
         RestAssured.baseURI = "http://localhost";
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
@@ -105,7 +121,6 @@ class TransactionsControllerTest {
         consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         consumerProps.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");
         consumerProps.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, "10000");
-
 
         // Mock JWT token for testing
         validJwtToken = "Bearer " + tokenGenerator.generateToken();

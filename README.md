@@ -444,21 +444,10 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-  security:
-    oauth2:
-      resource-server:
-        jwt:
-          issuer-uri: ${JWT_ISSUER_URI:http://localhost:8081/auth/realms/transactions}
-
-exchange-rate:
-  provider:
-    url: ${EXCHANGE_RATE_API_URL:https://api.exchangerate-api.com/v4/latest}
-    cache-duration: 300 # seconds
-    base-currency: IDR
 
 logging:
   level:
-    com.example.transactions: DEBUG
+    com.banking.transactions: DEBUG
 ```
 
 ### Environment Variables
@@ -473,44 +462,25 @@ logging:
 ### Docker Compose for Single-Node Kafka
 
 ```yaml
-version: '3.8'
 services:
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.4.0
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    ports:
-      - "2181:2181"
-
   kafka:
-    image: confluentinc/cp-kafka:7.4.0
-    depends_on:
-      - zookeeper
+    image: apache/kafka:4.1.0-rc2
+    container_name: kafka
     ports:
-      - "9092:9092"
+      - 9092:9092
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://localhost:9093
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
-      KAFKA_LOG_RETENTION_HOURS: 168
-    volumes:
-      - ./kafka-data:/var/lib/kafka/data
-
-  transactions-svc:
-    build: .
-    ports:
-      - "8080:8080"
-    depends_on:
-      - kafka
-    environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      JWT_ISSUER_URI: http://auth-service:8081/auth/realms/transactions
-      EXCHANGE_RATE_API_URL: https://api.exchangerate-api.com/v4/latest
-    volumes:
-      - ./logs:/app/logs
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_NUM_PARTITIONS: 3
 ```
 
 ### Kubernetes
@@ -536,7 +506,7 @@ spec:
         - containerPort: 8080
         env:
         - name: KAFKA_BOOTSTRAP_SERVERS
-          value: "kafka-cluster:9092"
+          value: "kafka-headless:9092"
 ```
 
 ## Monitoring
@@ -604,13 +574,3 @@ The service uses structured logging with the following levels:
 - **Scaling**: Vertical scaling only (more CPU/RAM to single node)
 - **Ordering**: Messages maintain strict order within each topic
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Implement changes with tests
-4. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
